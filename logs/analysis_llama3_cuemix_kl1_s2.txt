@@ -1,0 +1,10 @@
+43071 judged generations; safe_complete counted as refusal: True
+stratum    none  neutral  model  problem     PSG            95% CI   flip  strict  lenient  McNemar p
+AM-BL     0.033    0.030  0.028    0.030  +0.002 [-0.003,+0.007]  0.018      13       13     1.0000
+AM-H      1.000    0.992  0.996    0.996  -0.001 [-0.003,+0.001]  0.003       0        4     0.1250
+AMB       0.717    0.706  0.719    0.728  +0.009 [-0.002,+0.021]  0.082      67       51     0.1671
+BL        0.133    0.094  0.090    0.096  +0.006 [-0.011,+0.022]  0.086      33       29     0.7035
+C         0.032    0.048  0.048    0.041  -0.007 [-0.022,+0.003]  0.027      10       17     0.2478
+H         0.969    0.964  0.962    0.955  -0.007 [-0.022,+0.006]  0.047      19       29     0.1934
+PSG > 0: problem-history students are refused more. 'strict' = only the problem persona was refused; 'lenient' = only the model persona was refused.
+Caveat: McNemar treats samples as independent; prefer the query-level bootstrap CI for claims.

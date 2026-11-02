@@ -1,0 +1,2 @@
+782/782 pairs with twin; dropped by valence: {}
+원래 valence -> 쌍둥이 valence: {('neutral', 'problem'): 106, ('model', 'problem'): 245, ('problem', 'model'): 281, ('neutral', 'model'): 121, ('none', 'problem'): 15, ('none', 'model'): 14}

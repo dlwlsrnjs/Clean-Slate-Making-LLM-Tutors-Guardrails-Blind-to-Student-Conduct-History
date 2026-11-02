@@ -1,0 +1,15 @@
+# 가상환경, 대용량 데이터, 모델 산출물은 올리지 않는다 (서버 /resilience/ljk98/dm-persona 에만 있다)
+.venv-gen/
+.venv-train/
+data/*
+!data/labels_v2.json
+!data/personas.jsonl
+!data/judge_validation_GUIDE.md
+data_raw/
+runs/
+__pycache__/
+*.pyc
+# SLURM 표준출력, 모델 응답이 섞인 검토 파일, 큰 로그
+logs/dmp-*.out
+logs/review/
+logs/*.jsonl

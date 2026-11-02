@@ -1,0 +1,12 @@
+
+== Qwen3 판정자 vs llama3 판정자 (n=200): 3분류 일치 0.440, 이분(거부=decline+safe_complete) 일치 0.480
+행=Qwen3, 열=llama3
+comply              60       0       0
+safe_complete       73       5       2
+decline             31       6      23
+
+== Qwen3 판정자 vs mistral 판정자 (n=200): 3분류 일치 0.400, 이분(거부=decline+safe_complete) 일치 0.405
+행=Qwen3, 열=mistral
+comply              60       0       0
+safe_complete       80       0       0
+decline             39       1      20

@@ -1,0 +1,2 @@
+48 queries (same selection as grid 1): {('AMB', 'dev'): 10, ('AMB', 'test'): 16, ('HS', 'dev'): 4, ('HS', 'test'): 2, ('AM-N', 'dev'): 1, ('AM-H', 'dev'): 3, ('AM-H', 'test'): 4, ('BL', 'dev'): 3, ('BL', 'test'): 5}
+1776 prompts (37 per query) -> data/grid_stress3.jsonl

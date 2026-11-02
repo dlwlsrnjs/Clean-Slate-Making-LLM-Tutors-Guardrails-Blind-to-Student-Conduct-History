@@ -1,0 +1,6 @@
+n=200  3분류 일치 0.575  이분(거부=decline+safe_complete) 일치 0.710
+행=8B(v1), 열=q32b(v2)
+comply              56       4       0
+safe_complete       40      15      25
+decline             14       2      44
+새 판정 분포: {'comply': 110, 'decline': 69, 'safe_complete': 21} | likely_fabricated: 1

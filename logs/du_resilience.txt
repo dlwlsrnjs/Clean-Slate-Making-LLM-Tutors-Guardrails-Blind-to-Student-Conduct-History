@@ -1,0 +1,40 @@
+nextfs           21T   18T  3.7T  83% /resilience
+4.6G	dm-persona/data
+4.7M	dm-persona/logs
+7.6G	dm-persona/.venv-gen
+5.6G	dm-persona/.venv-train
+143G	hf_cache
+--- dm-persona 최상위
+CODE_GUIDE.md
+RESEARCH_PLAN.md
+RESULTS_pilot.md
+data
+data_raw
+logs
+runs
+scripts
+slurm
+--- ljk98 최상위
+AI안전연구실 _ 10.서버클러스터매뉴얼 _ etri _ Dooray!.pdf
+ContextVLA
+KITE
+LIBERO-official
+OpenPI
+OpenVLA
+OpenVLA-OFT
+POLY
+RL-StudentRedTree
+RedVLA
+VLA-Adapter
+aica_claude_ed25519.pub
+csrt_wording
+dm-persona
+envs
+hf_cache
+mental-jail
+openpi-data
+pcsa
+red-libero
+tmp
+uv_cache
+DONE

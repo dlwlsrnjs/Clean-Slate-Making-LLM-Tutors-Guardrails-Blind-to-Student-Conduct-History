@@ -1,0 +1,6 @@
+queries with a clean chosen: 281/320
+mined 3104 -> per-query cap 947 (decline-type 291, comply-type 656); kept 582
+  R1: 537
+  R2: 45
+  by stratum: {'AM-BL': 70, 'AM-H': 280, 'AM-N': 6, 'BL': 90, 'C': 96, 'H': 11, 'HS': 29}
+  mean chosen/rejected length: 1374 / 1142

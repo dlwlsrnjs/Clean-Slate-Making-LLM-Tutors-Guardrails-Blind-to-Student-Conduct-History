@@ -1,0 +1,3 @@
+mined 4234 (decline-type 1274, comply-type 2960); kept 2548
+  R1: 2034
+  R2: 514
