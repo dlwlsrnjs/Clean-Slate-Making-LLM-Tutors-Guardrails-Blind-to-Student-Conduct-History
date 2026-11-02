@@ -1,0 +1,7 @@
+-rw-r--r-- 1 ljk98 resilience   11667937 Nov  2 06:41 dmp_essentials.tar.gz
+-rw-r--r-- 1 ljk98 resilience  381322672 Nov  2 06:42 dmp_results.tar.gz
+-rw-r--r-- 1 ljk98 resilience 8227430400 Nov  2 06:42 dmp_runs.tar
+125a9ad8474b2bea7ee4be6abc97d2d4d91a86f44c9170787e56743051212151  dmp_essentials.tar.gz
+4ec11538ee6c012a2d2690e02bc7eb60685c4a86c893d5ccbae57dfe8fdb4d32  dmp_results.tar.gz
+1fda9e70387ec4ddc063fb36ae3f9e390f97d6bfa2a3fff57a3f0d57e9114a3e  dmp_runs.tar
+essentials 파일 수: 62, results: 80

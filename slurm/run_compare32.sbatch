@@ -6,11 +6,9 @@
 #SBATCH -c 2
 #SBATCH --mem=16G
 #SBATCH -t 00:30:00
-#SBATCH -o /home/ljk98/dm-persona/logs/%x-%j.out
+#SBATCH -o logs/%x-%j.out
 set -euo pipefail
-ROOT=/resilience/ljk98/dm-persona
-rsync -a /home/ljk98/dm-persona/scripts /home/ljk98/dm-persona/slurm "$ROOT"/
-cd "$ROOT"
+source "${SLURM_SUBMIT_DIR:-$PWD}/slurm/env.sh"
 BASE=$1
 OUT=logs/compare32_$(echo "$2" | tr ' ' '_').txt
 {
@@ -25,4 +23,4 @@ for t in $2; do
   python3 -I scripts/06_compare.py --run base=data/judged_${BASE}_q32.jsonl --run new=data/judged_${t}_q32.jsonl
 done
 } | tee "$OUT"
-cp "$OUT" /home/ljk98/dm-persona/logs/
+back "$OUT"

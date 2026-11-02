@@ -9,15 +9,9 @@
 #SBATCH -c 8
 #SBATCH --mem=32G
 #SBATCH -t 02:00:00
-#SBATCH -o /home/ljk98/dm-persona/logs/%x-%j.out
+#SBATCH -o logs/%x-%j.out
 set -euo pipefail
-ROOT=/resilience/ljk98/dm-persona
-export HF_HOME=/resilience/ljk98/hf_cache      # 모델 캐시도 resilience 에 둔다
-export UV_CACHE_DIR=/resilience/ljk98/uv_cache
-mkdir -p "$ROOT/data" "$ROOT/logs"
-# 코드는 로그인 노드(/home/ljk98/dm-persona)에서 편집하고, job 시작 때 resilience 로 동기화한다 (로그인 노드에서는 /resilience 가 안 보인다)
-rsync -a /home/ljk98/dm-persona/scripts /home/ljk98/dm-persona/slurm "$ROOT"/
-cd "$ROOT"
+source "${SLURM_SUBMIT_DIR:-$PWD}/slurm/env.sh"
 rm -rf .venv-gen .venv-train
 uv venv --python 3.11 .venv-gen
 uv pip install --python .venv-gen/bin/python "vllm==0.8.5" "transformers<4.58" pandas openpyxl setuptools

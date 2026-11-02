@@ -5,11 +5,9 @@
 #SBATCH -c 2
 #SBATCH --mem=16G
 #SBATCH -t 00:10:00
-#SBATCH -o /home/ljk98/dm-persona/logs/%x-%j.out
+#SBATCH -o logs/%x-%j.out
 set -euo pipefail
-ROOT=/resilience/ljk98/dm-persona
-rsync -a /home/ljk98/dm-persona/scripts /home/ljk98/dm-persona/slurm "$ROOT"/
-cd "$ROOT"
+source "${SLURM_SUBMIT_DIR:-$PWD}/slurm/env.sh"
 python3 -I scripts/30_make_twin_pairs.py "$1" "$2" | tee logs/twin_$2.txt
-cp logs/twin_$2.txt /home/ljk98/dm-persona/logs/
-cp data/$2_meta.jsonl /home/ljk98/dm-persona/data/
+back logs/twin_$2.txt
+back data/$2_meta.jsonl

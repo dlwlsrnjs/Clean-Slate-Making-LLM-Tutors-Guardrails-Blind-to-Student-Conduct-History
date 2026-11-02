@@ -10,15 +10,9 @@
 #SBATCH -c 8
 #SBATCH --mem=64G
 #SBATCH -t 03:00:00
-#SBATCH -o /home/ljk98/dm-persona/logs/%x-%j.out
+#SBATCH -o logs/%x-%j.out
 set -euo pipefail
-ROOT=/resilience/ljk98/dm-persona
-export HF_HOME=/resilience/ljk98/hf_cache      # 모델 캐시도 resilience 에 둔다
-export UV_CACHE_DIR=/resilience/ljk98/uv_cache
-mkdir -p "$ROOT/data" "$ROOT/logs"
-# 코드는 로그인 노드(/home/ljk98/dm-persona)에서 편집하고, job 시작 때 resilience 로 동기화한다 (로그인 노드에서는 /resilience 가 안 보인다)
-rsync -a /home/ljk98/dm-persona/scripts /home/ljk98/dm-persona/slurm "$ROOT"/
-cd "$ROOT"
+source "${SLURM_SUBMIT_DIR:-$PWD}/slurm/env.sh"
 MODEL=$1; TAG=$2; SPLITS=$3; N=$4; LORA=${5:-}
 # (1) 라벨링된 쿼리 중 지정한 split 만 골라 이 태그 전용 파일로 저장 (python3 -I = 격리 모드, 표준 라이브러리만 사용)
 python3 -I - "$SPLITS" "$TAG" <<'PY'
@@ -37,4 +31,4 @@ python3 -I scripts/02_build_probe_grid.py data/queries_probe_$TAG.jsonl data/per
 .venv-gen/bin/python scripts/12_judge.py --gens data/gens_$TAG.jsonl --out data/judged_$TAG.jsonl
 python3 -I scripts/05_analyze.py data/judged_$TAG.jsonl --safe-complete-as-refusal | tee logs/analysis_$TAG.txt
 # 분석표는 로그인 노드에서 읽을 수 있게 /home 쪽 logs 에도 복사해 둔다 (원본 데이터는 resilience 에만 둔다)
-cp logs/analysis_$TAG.txt /home/ljk98/dm-persona/logs/
+back logs/analysis_$TAG.txt

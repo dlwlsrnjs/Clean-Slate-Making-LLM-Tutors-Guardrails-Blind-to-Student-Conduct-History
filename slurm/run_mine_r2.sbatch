@@ -6,11 +6,9 @@
 #SBATCH -c 2
 #SBATCH --mem=24G
 #SBATCH -t 00:30:00
-#SBATCH -o /home/ljk98/dm-persona/logs/%x-%j.out
+#SBATCH -o logs/%x-%j.out
 set -euo pipefail
-ROOT=/resilience/ljk98/dm-persona
-rsync -a /home/ljk98/dm-persona/scripts /home/ljk98/dm-persona/slurm "$ROOT"/
-cd "$ROOT"
+source "${SLURM_SUBMIT_DIR:-$PWD}/slurm/env.sh"
 : > data/judged_$2_merged.jsonl
 # *_hviol_* (H 합성 위반 응답)은 재라벨 후에도 H(gold=decline)인 행만 쓴다 — 'warn 하지 마라' 지시로 만든 응답이 HS 등의 chosen 후보가 되면 안 된다
 for t in $1; do
@@ -20,5 +18,5 @@ for t in $1; do
   esac
 done
 python3 -I scripts/03b_mine_dpo_pairs_v3.py data/judged_$2_merged.jsonl data/$2 | tee logs/mine_$2.txt
-cp logs/mine_$2.txt /home/ljk98/dm-persona/logs/
-cp data/$2_meta.jsonl /home/ljk98/dm-persona/data/
+back logs/mine_$2.txt
+back data/$2_meta.jsonl

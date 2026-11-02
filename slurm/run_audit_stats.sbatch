@@ -5,10 +5,8 @@
 #SBATCH -c 2
 #SBATCH --mem=16G
 #SBATCH -t 00:20:00
-#SBATCH -o /home/ljk98/dm-persona/logs/%x-%j.out
+#SBATCH -o logs/%x-%j.out
 set -euo pipefail
-ROOT=/resilience/ljk98/dm-persona
-rsync -a /home/ljk98/dm-persona/scripts /home/ljk98/dm-persona/slurm "$ROOT"/
-cd "$ROOT"
+source "${SLURM_SUBMIT_DIR:-$PWD}/slurm/env.sh"
 python3 -I scripts/15_audit_stats.py data dpo_llama3 dpo_llama3_v2 --runs llama3 llama3_dpo1 llama3_dpo2 | tee logs/audit_stats.txt
-cp logs/audit_stats.txt /home/ljk98/dm-persona/logs/
+back logs/audit_stats.txt

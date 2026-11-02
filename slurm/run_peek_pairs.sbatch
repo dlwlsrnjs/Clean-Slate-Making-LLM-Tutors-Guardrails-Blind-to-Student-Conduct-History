@@ -5,10 +5,11 @@
 #SBATCH -c 1
 #SBATCH --mem=8G
 #SBATCH -t 00:10:00
-#SBATCH -o /home/ljk98/dm-persona/logs/%x-%j.out
+#SBATCH -o logs/%x-%j.out
 set -euo pipefail
-cd /resilience/ljk98/dm-persona
-python3 -I - "$1" "$2" <<'PY' > /home/ljk98/dm-persona/logs/review/peek_$1.md
+source "${SLURM_SUBMIT_DIR:-$PWD}/slurm/env.sh"
+mkdir -p "$DMP_CODE/logs/review"
+python3 -I - "$1" "$2" <<'PY' > "$DMP_CODE/logs/review/peek_$1.md"
 import json, random, sys
 pre, strata = sys.argv[1], set(sys.argv[2].split(","))
 P = [json.loads(l) for l in open(f"data/{pre}.jsonl", encoding="utf-8")]

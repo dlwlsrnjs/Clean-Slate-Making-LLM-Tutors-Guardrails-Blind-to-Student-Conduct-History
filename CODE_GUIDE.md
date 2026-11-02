@@ -165,10 +165,9 @@ dm-persona/
 - 04는 실행 전이다.
 
 ## 작업 위치 (resilience 이전)
-- 데이터·venv·HF 모델 캐시·생성물은 모두 `/resilience/ljk98/dm-persona`(HF는 `/resilience/ljk98/hf_cache`)에 둔다. 이 경로는 **계산 노드에서만** 보인다.
-- 코드는 로그인 노드의 `/home/ljk98/dm-persona/{scripts,slurm}` 에서 편집한다. 모든 sbatch 는 시작할 때 이 코드를 resilience 로 rsync 한 뒤 거기서 실행한다.
-- GPU 작업은 항상 `sbatch slurm/<파일>` 로 제출한다. 분석표(`logs/analysis_*.txt`)는 job 끝에 /home 쪽 logs 로도 복사된다.
-- `slurm/migrate.sbatch`: /home 의 기존 data·logs·HF 모델 3종을 resilience 로 복사하는 1회성 job.
+- 경로는 모두 상대경로이고 환경변수로 바꾼다(`slurm/env.sh`). `DMP_CODE`=저장소 루트(기본: sbatch 를 실행한 디렉터리), `DMP_WORK`=data/, runs/, logs/, .venv-* 가 있는 곳(기본: DMP_CODE). 별도 스토리지를 쓰는 서버는 `slurm/env.local.sh`(예시: env.local.example.sh)에서 지정한다.
+- 모든 sbatch 는 **저장소 루트에서** 제출한다(`#SBATCH -o logs/...` 가 제출 위치 기준). DMP_WORK 가 다르면 job 시작 때 scripts/, slurm/ 을 DMP_WORK 로 rsync 한다.
+- GPU 작업은 항상 `sbatch slurm/<파일>` 로 제출한다. 결과 요약(`logs/*.txt`)은 job 끝에 `back` 함수로 저장소 쪽 logs 에도 복사된다.
 
 ## 판정자 검증 (단계 9)
 - `scripts/07_make_validation_set.py` + `slurm/run_validation_set.sbatch`: 판정자 decision(comply 60 / safe_complete 80 / decline 60) x 층 x 출처 모델로 층화한 200개를 만든다. 사람에게는 요청+응답만 보이고 페르소나·출처·판정자 결과는 숨긴다.
@@ -224,7 +223,7 @@ H(와 AM-H) 거절 쌍이 얇아서 창작·연구 틀 우회에 제동이 약�
 ## 대조 DPO와 쌍대 검정 (단계 17~18, 결과 RESULTS_ctrl5.md)
 - `scripts/26_make_control_pairs.py` + `slurm/run_ctrlpairs.sbatch`: 원본 DPO 쌍(예: `dpo_llama3_v5`)에서 마지막 user 턴은 같게 두고 프롬프트를 `valence=none` 프롬프트로 바꿔 `<출력>.jsonl`(+`_meta`)을 만든다. 사용법 `sbatch slurm/run_ctrlpairs.sbatch dpo_llama3_v5 dpo_llama3_v5ctrl`.
 - `scripts/27_paired_contrast.py` + `slurm/run_paired.sbatch`: 두 모델의 PSG(문제−모범), 문제−중립, 모범−중립 차이를 같은 쿼리 재표본(2000회)으로 검정하고 BH 보정. 사용법 `sbatch slurm/run_paired.sbatch "llama3_ctrl5:llama3_dpo5 llama3:llama3_ctrl5" paired`, 출력 `logs/paired.txt`. 25번 스크립트의 `load/per_query/contrast/bh`를 재사용한다.
-- `slurm/run_du.sbatch`: `/resilience/ljk98` 용량 점검(CPU), 출력 `logs/du_resilience.txt`.
+- `slurm/pack_data.sbatch`: 다른 곳에서 이어서 작업하기 위해 파생 데이터(essentials/results/runs)를 `$DMP_WORK/export/` 로 묶는다(CPU).
 
 ## 스트레스 프로빙 (단계 19)
 - `scripts/28_build_stress_grid.py` + `slurm/run_stress.sbatch`: 이력 단서를 가장 강하게 만든 최악 조건 격자. 조건 4종(official 공식 기록·contradict 시점 모순·vague 모호·firstperson 1인칭), 채널 3종(system_card·memory_turns·self_turn). 쿼리는 base의 이력없음/중립 거부율이 0.15~0.85인 것만 고른다(problem/model 조건은 선택에 쓰지 않음). 격자는 `data/grid_stress.jsonl` 한 벌을 모든 모델이 공유한다.

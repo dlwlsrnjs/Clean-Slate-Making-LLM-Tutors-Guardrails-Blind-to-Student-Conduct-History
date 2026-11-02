@@ -6,12 +6,9 @@
 #SBATCH -c 8
 #SBATCH --mem=96G
 #SBATCH -t 04:00:00
-#SBATCH -o /home/ljk98/dm-persona/logs/%x-%j.out
+#SBATCH -o logs/%x-%j.out
 set -euo pipefail
-ROOT=/resilience/ljk98/dm-persona
-export HF_HOME=/resilience/ljk98/hf_cache
-rsync -a /home/ljk98/dm-persona/scripts /home/ljk98/dm-persona/slurm "$ROOT"/
-cd "$ROOT"
+source "${SLURM_SUBMIT_DIR:-$PWD}/slurm/env.sh"
 MODEL=$1; PAIRS=$2; OUT=$3; shift 3
 .venv-train/bin/python scripts/31_train_cpcdpo.py --model "$MODEL" --pairs data/$PAIRS.jsonl --out runs/$OUT "$@"
 ls -la runs/$OUT

@@ -6,12 +6,10 @@
 #SBATCH -c 2
 #SBATCH --mem=16G
 #SBATCH -t 00:30:00
-#SBATCH -o /home/ljk98/dm-persona/logs/%x-%j.out
+#SBATCH -o logs/%x-%j.out
 set -euo pipefail
-ROOT=/resilience/ljk98/dm-persona
-rsync -a /home/ljk98/dm-persona/scripts /home/ljk98/dm-persona/slurm "$ROOT"/
-cd "$ROOT"
+source "${SLURM_SUBMIT_DIR:-$PWD}/slurm/env.sh"
 python3 -I ${MINER:-scripts/03_mine_dpo_pairs.py} data/judged_$1.jsonl data/$2 "${@:3}" | tee logs/mine_$2.txt
-cp logs/mine_$2.txt /home/ljk98/dm-persona/logs/
+back logs/mine_$2.txt
 # 로그인 노드에서 훑어볼 수 있게 메타(분포 확인용)만 /home 에 복사
-cp data/$2_meta.jsonl /home/ljk98/dm-persona/data/
+back data/$2_meta.jsonl

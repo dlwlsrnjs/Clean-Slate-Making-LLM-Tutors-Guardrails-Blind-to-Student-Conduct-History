@@ -8,15 +8,9 @@
 #SBATCH -c 8
 #SBATCH --mem=64G
 #SBATCH -t 03:00:00
-#SBATCH -o /home/ljk98/dm-persona/logs/%x-%j.out
+#SBATCH -o logs/%x-%j.out
 set -euo pipefail
-ROOT=/resilience/ljk98/dm-persona
-export HF_HOME=/resilience/ljk98/hf_cache      # 모델 캐시도 resilience 에 둔다
-export UV_CACHE_DIR=/resilience/ljk98/uv_cache
-mkdir -p "$ROOT/data" "$ROOT/logs"
-# 코드는 로그인 노드(/home/ljk98/dm-persona)에서 편집하고, job 시작 때 resilience 로 동기화한다 (로그인 노드에서는 /resilience 가 안 보인다)
-rsync -a /home/ljk98/dm-persona/scripts /home/ljk98/dm-persona/slurm "$ROOT"/
-cd "$ROOT"
+source "${SLURM_SUBMIT_DIR:-$PWD}/slurm/env.sh"
 # data = 풀이 있는 곳이자 결과(queries.jsonl)를 쓰는 곳. CASTLE 에서 900개, 층당 최대 150개.
 .venv-gen/bin/python scripts/10_label_queries.py data data --castle-sample 900 --per-stratum 150
 wc -l data/queries.jsonl

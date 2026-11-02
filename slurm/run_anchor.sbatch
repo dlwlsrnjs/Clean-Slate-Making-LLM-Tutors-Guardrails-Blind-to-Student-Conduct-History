@@ -8,13 +8,10 @@
 #SBATCH -c 8
 #SBATCH --mem=96G
 #SBATCH -t 05:00:00
-#SBATCH -o /home/ljk98/dm-persona/logs/%x-%j.out
+#SBATCH -o logs/%x-%j.out
 set -euo pipefail
-ROOT=/resilience/ljk98/dm-persona
-export HF_HOME=/resilience/ljk98/hf_cache
-rsync -a /home/ljk98/dm-persona/scripts /home/ljk98/dm-persona/slurm "$ROOT"/
-cp /home/ljk98/dm-persona/data/labels_v2.json "$ROOT"/data/labels_v2.json
-cd "$ROOT"
+source "${SLURM_SUBMIT_DIR:-$PWD}/slurm/env.sh"
+fetch data/labels_v2.json
 PY=.venv-gen/bin/python
 if [ "${MINE_ONLY:-0}" != "1" ]; then
 if [ "${REUSE:-0}" = "1" ]; then
@@ -66,5 +63,5 @@ import collections
 print(f"merged {len(P0)} old + {len(keep)} anchor = {len(rows)}; anchor by stratum {cnt}; by recipe", dict(collections.Counter(m['recipe'] for _, m in rows)))
 print("by stratum", dict(collections.Counter(m['stratum'] for _, m in rows)))
 PY
-cp logs/mine_dpo_aug_anchor.txt /home/ljk98/dm-persona/logs/
-cp data/$3_meta.jsonl data/dpo_aug_anchor_meta.jsonl /home/ljk98/dm-persona/data/
+back logs/mine_dpo_aug_anchor.txt
+back data/$3_meta.jsonl data/dpo_aug_anchor_meta.jsonl

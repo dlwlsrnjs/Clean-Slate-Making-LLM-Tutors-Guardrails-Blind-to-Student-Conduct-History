@@ -1,14 +1,13 @@
 #!/bin/bash
-# 모델 가중치를 /resilience/ljk98/hf_cache 로 내려받는다 (CPU job). 사용법: sbatch slurm/download_model.sbatch <HF 모델 id>
+# 모델 가중치를 $HF_HOME(기본 $DMP_WORK/hf_cache) 로 내려받는다 (CPU job). 사용법: sbatch slurm/download_model.sbatch <HF 모델 id>
 #SBATCH -J dmp-download
 #SBATCH -p all
 #SBATCH -c 4
 #SBATCH --mem=16G
 #SBATCH -t 03:00:00
-#SBATCH -o /home/ljk98/dm-persona/logs/%x-%j.out
+#SBATCH -o logs/%x-%j.out
 set -euo pipefail
-export HF_HOME=/resilience/ljk98/hf_cache
-cd /resilience/ljk98/dm-persona
+source "${SLURM_SUBMIT_DIR:-$PWD}/slurm/env.sh"
 .venv-gen/bin/python -c "
 import sys
 from huggingface_hub import snapshot_download

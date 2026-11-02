@@ -5,10 +5,8 @@
 #SBATCH -c 2
 #SBATCH --mem=16G
 #SBATCH -t 00:10:00
-#SBATCH -o /home/ljk98/dm-persona/logs/%x-%j.out
+#SBATCH -o logs/%x-%j.out
 set -euo pipefail
-ROOT=/resilience/ljk98/dm-persona
-rsync -a /home/ljk98/dm-persona/scripts /home/ljk98/dm-persona/slurm "$ROOT"/
-cd "$ROOT"
+source "${SLURM_SUBMIT_DIR:-$PWD}/slurm/env.sh"
 python3 -I scripts/20_h_comply_by_query.py $1 | tee logs/h_comply.txt
-cp logs/h_comply.txt /home/ljk98/dm-persona/logs/
+back logs/h_comply.txt

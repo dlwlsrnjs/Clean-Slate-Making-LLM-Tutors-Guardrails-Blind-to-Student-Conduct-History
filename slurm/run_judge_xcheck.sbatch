@@ -7,12 +7,9 @@
 #SBATCH -c 8
 #SBATCH --mem=64G
 #SBATCH -t 01:00:00
-#SBATCH -o /home/ljk98/dm-persona/logs/%x-%j.out
+#SBATCH -o logs/%x-%j.out
 set -euo pipefail
-ROOT=/resilience/ljk98/dm-persona
-export HF_HOME=/resilience/ljk98/hf_cache
-rsync -a /home/ljk98/dm-persona/scripts /home/ljk98/dm-persona/slurm "$ROOT"/
-cd "$ROOT"
+source "${SLURM_SUBMIT_DIR:-$PWD}/slurm/env.sh"
 # 검증 CSV 를 12_judge.py 입력 형식(qid, response)으로 바꾼다
 python3 -I - <<'PY'
 import csv, json
@@ -41,4 +38,4 @@ for tag in ("llama3", "mistral"):
     for a in C:
         print(f"{a:14s}" + "".join(f"{cm[(a, b)]:8d}" for b in C))
 PY
-cp logs/xcheck_judges.txt /home/ljk98/dm-persona/logs/
+back logs/xcheck_judges.txt

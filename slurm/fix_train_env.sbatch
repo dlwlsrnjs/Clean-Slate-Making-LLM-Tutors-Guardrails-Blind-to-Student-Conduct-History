@@ -5,9 +5,8 @@
 #SBATCH -c 4
 #SBATCH --mem=16G
 #SBATCH -t 00:30:00
-#SBATCH -o /home/ljk98/dm-persona/logs/%x-%j.out
+#SBATCH -o logs/%x-%j.out
 set -euo pipefail
-cd /resilience/ljk98/dm-persona
-export UV_CACHE_DIR=/resilience/ljk98/uv_cache HF_HOME=/resilience/ljk98/hf_cache
+source "${SLURM_SUBMIT_DIR:-$PWD}/slurm/env.sh"
 uv pip install --python .venv-train/bin/python "pyarrow<21" "trl==0.19.1"
 .venv-train/bin/python -c "import pyarrow, datasets, trl; from trl import DPOConfig, DPOTrainer; print(pyarrow.__version__, datasets.__version__, trl.__version__, \"DPOTrainer ok\")"

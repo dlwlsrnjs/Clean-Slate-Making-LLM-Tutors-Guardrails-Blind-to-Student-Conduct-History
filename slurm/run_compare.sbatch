@@ -5,12 +5,10 @@
 #SBATCH -c 2
 #SBATCH --mem=16G
 #SBATCH -t 00:20:00
-#SBATCH -o /home/ljk98/dm-persona/logs/%x-%j.out
+#SBATCH -o logs/%x-%j.out
 set -euo pipefail
-ROOT=/resilience/ljk98/dm-persona
-rsync -a /home/ljk98/dm-persona/scripts /home/ljk98/dm-persona/slurm "$ROOT"/
-cd "$ROOT"
+source "${SLURM_SUBMIT_DIR:-$PWD}/slurm/env.sh"
 { python3 -I scripts/06_compare.py --run base=data/judged_$1.jsonl --run new=data/judged_$2.jsonl --q-split test --p-split test
   echo; echo "######## 전체 dev+test, 모든 표현군"
   python3 -I scripts/06_compare.py --run base=data/judged_$1.jsonl --run new=data/judged_$2.jsonl; } | tee logs/compare_$3.txt
-cp logs/compare_$3.txt /home/ljk98/dm-persona/logs/
+back logs/compare_$3.txt

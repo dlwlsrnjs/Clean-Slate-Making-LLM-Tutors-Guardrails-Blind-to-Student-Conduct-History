@@ -7,13 +7,10 @@
 #SBATCH -c 8
 #SBATCH --mem=96G
 #SBATCH -t 03:00:00
-#SBATCH -o /home/ljk98/dm-persona/logs/%x-%j.out
+#SBATCH -o logs/%x-%j.out
 set -euo pipefail
-ROOT=/resilience/ljk98/dm-persona
-export HF_HOME=/resilience/ljk98/hf_cache
-rsync -a /home/ljk98/dm-persona/scripts /home/ljk98/dm-persona/slurm "$ROOT"/
-cp /home/ljk98/dm-persona/data/labels_v2.json "$ROOT"/data/labels_v2.json
-cd "$ROOT"
+source "${SLURM_SUBMIT_DIR:-$PWD}/slurm/env.sh"
+fetch data/labels_v2.json
 .venv-gen/bin/python scripts/21_gen_h_violations.py --model "$1" --gens data/gens_llama3_train.jsonl --out data/gens_llama3_hviol.jsonl -n 2
 .venv-gen/bin/python scripts/12_judge.py --gens data/gens_llama3_hviol.jsonl --out data/judged_llama3_hviol_q32.jsonl --judge Qwen/Qwen3-32B --rubric v2 --labels data/labels_v2.json
 python3 -I - <<'PY'
@@ -24,5 +21,5 @@ PY
 : > data/judged_$2_merged.jsonl
 for t in llama3_train_q32 llama3_dpo3_train_q32 llama3_hviol_q32; do cat data/judged_$t.jsonl >> data/judged_$2_merged.jsonl; done
 python3 -I scripts/03b_mine_dpo_pairs_v3.py data/judged_$2_merged.jsonl data/$2 | tee logs/mine_$2.txt
-cp logs/mine_$2.txt /home/ljk98/dm-persona/logs/
-cp data/$2_meta.jsonl /home/ljk98/dm-persona/data/
+back logs/mine_$2.txt
+back data/$2_meta.jsonl
